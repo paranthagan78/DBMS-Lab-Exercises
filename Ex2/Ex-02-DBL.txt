@@ -1,0 +1,583 @@
+SQL> @"C:\Users\paran\Downloads\DBL\Ex2\Ex-02-DBL-Part-I.sql"
+SQL> SET ECHO ON
+SQL> 
+SQL> REM Classes Relation
+SQL> REM ****************
+SQL> 
+SQL> REM Dropping Classes Relation
+SQL> REM *********************
+SQL> 
+SQL> DROP TABLE Classes CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> REM Creating Classes Relation
+SQL> REM *************************
+SQL> 
+SQL> CREATE TABLE Classes(
+  2  Class VARCHAR(50) PRIMARY KEY,
+  3  Type CHAR(2),
+  4  Country VARCHAR(50),
+  5  NumGuns INT,
+  6  Bore INT,
+  7  Displacement INT
+  8  );
+
+Table created.
+
+SQL> 
+SQL> REM 1. Populate the relation using INSERT clause.
+SQL> REM *********************************************
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('Bismark', 'bb', 'Germany', 8, 14, 32000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('Iowa', 'bb', 'USA', 9, 16, 46000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('Kongo', 'bc', 'Japan', 8, 15, 42000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('North Carolina', 'bb', 'USA', 9, 16, 37000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('Revenge', 'bb', 'Gt. Britain', 8, 15, 29000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Classes
+  2  VALUES ('Renown', 'bc', 'Gt. Britain', 6, 15, 32000);
+
+1 row created.
+
+SQL> 
+SQL> REM 2. Display the populated relation.
+SQL> REM **********************************
+SQL> 
+SQL> SELECT * FROM Classes;
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+Bismark                                            bb                           
+Germany                                                     8         14        
+       32000                                                                    
+                                                                                
+Iowa                                               bb                           
+USA                                                         9         16        
+       46000                                                                    
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+                                                                                
+Kongo                                              bc                           
+Japan                                                       8         15        
+       42000                                                                    
+                                                                                
+North Carolina                                     bb                           
+USA                                                         9         16        
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+       37000                                                                    
+                                                                                
+Revenge                                            bb                           
+Gt. Britain                                                 8         15        
+       29000                                                                    
+                                                                                
+Renown                                             bc                           
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+Gt. Britain                                                 6         15        
+       32000                                                                    
+                                                                                
+
+6 rows selected.
+
+SQL> 
+SQL> REM 3. Mark an intermediate point in this transaction.
+SQL> REM **************************************************
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SAVEPOINT after_insert;
+
+Savepoint created.
+
+SQL> 
+SQL> REM 4. For the battleships having at least 9 number of guns or the ships with at least 15 inch bore, increase the displacement by 10%.
+SQL> REM **********************************************************************************************************************************
+SQL> 
+SQL> UPDATE Classes SET Displacement = (Displacement * 0.10) WHERE ((NumGuns >= 9 AND Type = 'bb' ) OR (BORE >= 15));
+
+5 rows updated.
+
+SQL> 
+SQL> REM 5. Delete Kongo class of ship from Classes table.
+SQL> REM *************************************************
+SQL> 
+SQL> DELETE FROM Classes WHERE Class = 'Kongo';
+
+1 row deleted.
+
+SQL> 
+SQL> REM 6. Display your changes to the table
+SQL> REM ************************************
+SQL> 
+SQL> SELECT * FROM Classes;
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+Bismark                                            bb                           
+Germany                                                     8         14        
+       32000                                                                    
+                                                                                
+Iowa                                               bb                           
+USA                                                         9         16        
+        4600                                                                    
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+                                                                                
+North Carolina                                     bb                           
+USA                                                         9         16        
+        3700                                                                    
+                                                                                
+Revenge                                            bb                           
+Gt. Britain                                                 8         15        
+
+CLASS                                              TY                           
+-------------------------------------------------- --                           
+COUNTRY                                               NUMGUNS       BORE        
+-------------------------------------------------- ---------- ----------        
+DISPLACEMENT                                                                    
+------------                                                                    
+        2900                                                                    
+                                                                                
+Renown                                             bc                           
+Gt. Britain                                                 6         15        
+        3200                                                                    
+                                                                                
+
+SQL> 
+SQL> REM 7. Discard the recent updates to the relation without discarding the earlier INSERT operation(s).
+SQL> REM *************************************************************************************************
+SQL> 
+SQL> ROLLBACK TO SAVEPOINT after_insert;
+
+Rollback complete.
+
+SQL> 
+SQL> REM 8. Commit the changes.
+SQL> REM **********************
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> @"C:\Users\paran\Downloads\DBL\Ex2\Ex-02-DBL-Part-II.sql"
+SQL> REM Employees Relation
+SQL> REM ******************
+SQL> 
+SQL> REM 9. Display first name, job id and salary of all the employees.
+SQL> REM **************************************************************
+SQL> 
+SQL> SELECT FIRST_NAME, JOB_ID, SALARY FROM Employees;
+
+FIRST_NAME           JOB_ID         SALARY                                      
+-------------------- ---------- ----------                                      
+Steven               AD_PRES         24000                                      
+Neena                AD_VP           17000                                      
+Lex                  AD_VP           17000                                      
+Alexander            IT_PROG          9000                                      
+Bruce                IT_PROG          6000                                      
+David                IT_PROG          4800                                      
+Valli                IT_PROG          4800                                      
+Diana                IT_PROG          4200                                      
+Kevin                ST_MAN           5800                                      
+Trenna               ST_CLERK         3500                                      
+Curtis               ST_CLERK         3100                                      
+
+FIRST_NAME           JOB_ID         SALARY                                      
+-------------------- ---------- ----------                                      
+Randall              ST_CLERK         2600                                      
+Peter                ST_CLERK         2500                                      
+Eleni                SA_MAN          10500                                      
+Ellen                SA_REP          11000                                      
+Jonathon             SA_REP           8600                                      
+Kimberely            SA_REP           7000                                      
+Jennifer             AD_ASST          4400                                      
+Michael              MK_MAN          13000                                      
+Pat                  MK_REP           6000                                      
+Shelley              AC_MGR          12000                                      
+William              AC_ACCOUNT       8300                                      
+
+22 rows selected.
+
+SQL> 
+SQL> REM 10. Display the id, name(first & last), salary and annual salary of all the employees.
+SQL> REM Sort the employees by first name. Label the columns as shown below:
+SQL> REM (EMPLOYEE_ID, FULL NAME, MONTHLY SAL, ANNUAL SALARY)
+SQL> REM ***********************************************************************************
+SQL> 
+SQL> SELECT EMPLOYEE_ID AS "EMPLOYEE_ID",
+  2  CONCAT(CONCAT(FIRST_NAME, ' '),  LAST_NAME) AS "FULL_NAME",
+  3  SALARY AS "MONTHLY SAL",
+  4  SALARY * 12 AS "ANNUAL SALARY"
+  5  FROM Employees
+  6  ORDER BY FIRST_NAME;
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        103 Alexander Hunold                                      9000          
+       108000                                                                   
+                                                                                
+        104 Bruce Ernst                                           6000          
+        72000                                                                   
+                                                                                
+        142 Curtis Davies                                         3100          
+        37200                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        105 David Austin                                          4800          
+        57600                                                                   
+                                                                                
+        107 Diana Lorentz                                         4200          
+        50400                                                                   
+                                                                                
+        149 Eleni Zlotkey                                        10500          
+       126000                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        174 Ellen Abel                                           11000          
+       132000                                                                   
+                                                                                
+        200 Jennifer Whalen                                       4400          
+        52800                                                                   
+                                                                                
+        176 Jonathon Taylor                                       8600          
+       103200                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        124 Kevin Mourgos                                         5800          
+        69600                                                                   
+                                                                                
+        178 Kimberely Grant                                       7000          
+        84000                                                                   
+                                                                                
+        102 Lex De Haan                                          17000          
+       204000                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        201 Michael Hartstein                                    13000          
+       156000                                                                   
+                                                                                
+        101 Neena Kochhar                                        17000          
+       204000                                                                   
+                                                                                
+        202 Pat Fay                                               6000          
+        72000                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        144 Peter Vargas                                          2500          
+        30000                                                                   
+                                                                                
+        143 Randall Matos                                         2600          
+        31200                                                                   
+                                                                                
+        205 Shelley Higgins                                      12000          
+       144000                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        100 Steven King                                          24000          
+       288000                                                                   
+                                                                                
+        141 Trenna Rajs                                           3500          
+        42000                                                                   
+                                                                                
+        106 Valli Pataballa                                       4800          
+        57600                                                                   
+                                                                                
+
+EMPLOYEE_ID FULL_NAME                                      MONTHLY SAL          
+----------- ---------------------------------------------- -----------          
+ANNUAL SALARY                                                                   
+-------------                                                                   
+        206 William Gietz                                         8300          
+        99600                                                                   
+                                                                                
+
+22 rows selected.
+
+SQL> 
+SQL> REM  11. List the different jobs in which the employees are working for.
+SQL> REM  **************************************************************
+SQL> 
+SQL> SELECT DISTINCT JOB_ID FROM EMPLOYEES;
+
+JOB_ID                                                                          
+----------                                                                      
+AD_PRES                                                                         
+AD_VP                                                                           
+IT_PROG                                                                         
+ST_MAN                                                                          
+ST_CLERK                                                                        
+SA_MAN                                                                          
+SA_REP                                                                          
+AD_ASST                                                                         
+MK_MAN                                                                          
+MK_REP                                                                          
+AC_MGR                                                                          
+
+JOB_ID                                                                          
+----------                                                                      
+AC_ACCOUNT                                                                      
+
+12 rows selected.
+
+SQL> 
+SQL> REM 12. Display the id, first name, job id, salary and commission of employees who are
+SQL> REM earning commissions.
+SQL> REM *******************************************************************************
+SQL> 
+SQL> SELECT EMPLOYEE_ID, FIRST_NAME,
+  2  JOB_ID, SALARY, COMMISSION_PCT
+  3  FROM Employees
+  4  WHERE COMMISSION_PCT IS NOT NULL;
+
+EMPLOYEE_ID FIRST_NAME           JOB_ID         SALARY COMMISSION_PCT           
+----------- -------------------- ---------- ---------- --------------           
+        149 Eleni                SA_MAN          10500             .2           
+        174 Ellen                SA_REP          11000             .3           
+        176 Jonathon             SA_REP           8600             .2           
+        178 Kimberely            SA_REP           7000            .15           
+
+SQL> 
+SQL> REM 13. Display the details (id, first name, job id, salary and dept id) of employees who are MANAGERS
+SQL> REM **************************************************************************************************
+SQL> 
+SQL> SELECT EMPLOYEE_ID, FIRST_NAME,
+  2  SALARY, DEPARTMENT_ID
+  3  FROM Employees
+  4  WHERE JOB_ID LIKE '%MAN' OR JOB_ID LIKE '%MGR';
+
+EMPLOYEE_ID FIRST_NAME               SALARY DEPARTMENT_ID                       
+----------- -------------------- ---------- -------------                       
+        124 Kevin                      5800            50                       
+        149 Eleni                     10500            80                       
+        201 Michael                   13000            20                       
+        205 Shelley                   12000           110                       
+
+SQL> 
+SQL> REM 14. Display the details of employees other than sales representatives (id, first name,
+SQL> REM hire date, job id, salary and dept id) who are hired after ‘01-May-1999’ or whose
+SQL> REM salary is at least 10000.
+SQL> REM **************************************************************************************
+SQL> 
+SQL> SELECT EMPLOYEE_ID, FIRST_NAME,
+  2  HIRE_DATE, JOB_ID,
+  3  SALARY, DEPARTMENT_ID
+  4  FROM Employees
+  5  WHERE JOB_ID <> 'SA_REP' AND
+  6  ((HIRE_DATE > TO_DATE('01-MAY-1999', 'dd-MON-yyyy')) OR
+  7  SALARY > 10000);
+
+EMPLOYEE_ID FIRST_NAME           HIRE_DATE JOB_ID         SALARY DEPARTMENT_ID  
+----------- -------------------- --------- ---------- ---------- -------------  
+        100 Steven               17-JUN-87 AD_PRES         24000            90  
+        101 Neena                21-SEP-89 AD_VP           17000            90  
+        102 Lex                  13-JAN-93 AD_VP           17000            90  
+        124 Kevin                16-NOV-99 ST_MAN           5800            50  
+        149 Eleni                29-JAN-00 SA_MAN          10500            80  
+        201 Michael              17-FEB-96 MK_MAN          13000            20  
+        205 Shelley              07-JUN-94 AC_MGR          12000           110  
+
+7 rows selected.
+
+SQL> 
+SQL> REM 15. Display the employee details (first name, salary, hire date and dept id) whose
+SQL> REM salary falls in the range of 5000 to 15000 and his/her name begins with any of
+SQL> REM characters (A,J,K,S). Sort the output by first name.
+SQL> REM ***********************************************************************************
+SQL> 
+SQL> SELECT FIRST_NAME, SALARY,
+  2  HIRE_DATE, DEPARTMENT_ID
+  3  FROM Employees
+  4  WHERE ((SALARY BETWEEN 5000 AND 15000) AND
+  5  (
+  6  (FIRST_NAME LIKE 'A%') OR
+  7  (FIRST_NAME LIKE 'J%') OR
+  8  (FIRST_NAME LIKE 'K%') OR
+  9  (FIRST_NAME LIKE 'S%')
+ 10  )
+ 11  )
+ 12  ORDER BY FIRST_NAME;
+
+FIRST_NAME               SALARY HIRE_DATE DEPARTMENT_ID                         
+-------------------- ---------- --------- -------------                         
+Alexander                  9000 03-JAN-90            60                         
+Jonathon                   8600 24-MAR-98            80                         
+Kevin                      5800 16-NOV-99            50                         
+Kimberely                  7000 24-MAY-99                                       
+Shelley                   12000 07-JUN-94           110                         
+
+SQL> 
+SQL> REM 16. Display the experience of employees in no. of years and months who were hired
+SQL> REM after 1998. Label the columns as: (EMPLOYEE_ID, FIRST_NAME, HIRE_DATE, EXP-YRS,
+SQL> REM EXP-MONTHS)
+SQL> REM *********************************************************************************
+SQL> 
+SQL> SELECT EMPLOYEE_ID AS "EMPLOYEE_ID",
+  2  FIRST_NAME AS "FIRST_NAME",
+  3  HIRE_DATE AS "HIRE_DATE",
+  4  ROUND((SYSDATE - HIRE_DATE)/365, 0) AS "EXP-YRS",
+  5  ROUND((MOD((SYSDATE - HIRE_DATE ), 365)/30), 0) AS "EXP-MONTHS"
+  6  FROM Employees
+  7  WHERE HIRE_DATE >= TO_DATE('01-JAN-1998', 'dd-MON-yyyy');
+
+EMPLOYEE_ID FIRST_NAME           HIRE_DATE    EXP-YRS EXP-MONTHS                
+----------- -------------------- --------- ---------- ----------                
+        106 Valli                05-FEB-98         26          9                
+        107 Diana                07-FEB-99         25          9                
+        124 Kevin                16-NOV-99         24         12                
+        143 Randall              15-MAR-98         26          8                
+        144 Peter                09-JUL-98         25          4                
+        149 Eleni                29-JAN-00         24         10                
+        176 Jonathon             24-MAR-98         26          8                
+        178 Kimberely            24-MAY-99         24          6                
+
+8 rows selected.
+
+SQL> 
+SQL> REM 17. Display the total number of departments.
+SQL> REM ****************************************
+SQL> 
+SQL> SELECT COUNT(DISTINCT DEPARTMENT_ID) FROM EMPLOYEES;
+
+COUNT(DISTINCTDEPARTMENT_ID)                                                    
+----------------------------                                                    
+                           7                                                    
+
+SQL> 
+SQL> REM 18. Show the number of employees hired by year-wise. Sort the result by year-wise.
+SQL> REM **********************************************************************************
+SQL> 
+SQL> SELECT EXTRACT(YEAR FROM HIRE_DATE) AS HIRE_YEAR,
+  2  COUNT(*) AS NUM_OF_EMPLOYEES
+  3  FROM Employees
+  4  GROUP BY EXTRACT(YEAR FROM HIRE_DATE)
+  5  ORDER BY HIRE_YEAR;
+
+ HIRE_YEAR NUM_OF_EMPLOYEES                                                     
+---------- ----------------                                                     
+      1987                2                                                     
+      1989                1                                                     
+      1990                1                                                     
+      1991                1                                                     
+      1993                1                                                     
+      1994                2                                                     
+      1995                1                                                     
+      1996                2                                                     
+      1997                3                                                     
+      1998                4                                                     
+      1999                3                                                     
+
+ HIRE_YEAR NUM_OF_EMPLOYEES                                                     
+---------- ----------------                                                     
+      2000                1                                                     
+
+12 rows selected.
+
+SQL> 
+SQL> REM 19. Display the minimum, maximum and average salary, number of employees for
+SQL> REM each department. Exclude the employee(s) who are not in any department.
+SQL> REM Include the department(s) with at least 2 employees and the average salary is
+SQL> REM more than 10000. Sort the result by minimum salary in descending order
+SQL> REM *****************************************************************************
+SQL> 
+SQL> SELECT DEPARTMENT_ID,
+  2  MIN(SALARY) AS MIN_SALARY,
+  3  MAX(SALARY) AS MAX_SALARY,
+  4  AVG(SALARY) AS AVERAGE_SALARY,
+  5  COUNT(*) AS NUM_OF_EMPLOYEES
+  6  FROM Employees
+  7  WHERE DEPARTMENT_ID IS NOT NULL
+  8  GROUP BY DEPARTMENT_ID
+  9  HAVING COUNT(*) >= 2 AND AVG(SALARY) > 10000
+ 10  ORDER BY MIN(SALARY) DESC;
+
+DEPARTMENT_ID MIN_SALARY MAX_SALARY AVERAGE_SALARY NUM_OF_EMPLOYEES             
+------------- ---------- ---------- -------------- ----------------             
+           90      17000      24000     19333.3333                3             
+           80       8600      11000     10033.3333                3             
+          110       8300      12000          10150                2             
+
+SQL> spool off

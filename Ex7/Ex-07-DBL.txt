@@ -1,0 +1,78 @@
+SQL> @"E:\Sem 3 Lab\DBL\Ex7\Ex-07-DBL.sql"
+SQL> SET SERVEROUTPUT ON;
+SQL> SET ECHO ON;
+SQL> 
+SQL> 
+SQL> REM Ensure that the pizza can be delivered on same day or on the next day only
+SQL> CREATE OR REPLACE TRIGGER CheckDeliveryDate
+  2  BEFORE INSERT ON ORDERS
+  3  FOR EACH ROW
+  4  DECLARE
+  5  	 v_max_allowed_date DATE;
+  6  BEGIN
+  7  	 -- Calculate the maximum allowed delivery date (today or next day)
+  8  	 v_max_allowed_date := SYSDATE + 1;
+  9  
+ 10  	 IF :NEW.delv_date NOT IN (TRUNC(SYSDATE), TRUNC(SYSDATE + 1)) THEN
+ 11  	     -- If the delivery date is not today or tomorrow, raise an exception
+ 12  	     RAISE_APPLICATION_ERROR(-20001, 'Invalid delivery date. Pizza can be delivered on the same day or the next day only.');
+ 13  	 END IF;
+ 14  END;
+ 15  /
+
+Trigger created.
+
+SQL> 
+SQL> REM Update the total_amt in ORDERS while entering an order in ORDER_LIST.
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER UpdateTotalAmt
+  2  AFTER INSERT ON ORDER_LIST
+  3  FOR EACH ROW
+  4  DECLARE
+  5  	 v_total_amt NUMBER;
+  6  BEGIN
+  7  	 -- Calculate the total_amt for the corresponding order
+  8  	 SELECT SUM(ol.qty * p.unit_price)
+  9  	 INTO v_total_amt
+ 10  	 FROM ORDER_LIST ol
+ 11  	 JOIN PIZZA p ON ol.pizza_id = p.pizza_id
+ 12  	 WHERE ol.order_no = :NEW.order_no;
+ 13  
+ 14  	 -- Update the total_amt in the ORDERS table
+ 15  	 UPDATE ORDERS
+ 16  	 SET total_amt = v_total_amt
+ 17  	 WHERE order_no = :NEW.order_no;
+ 18  END;
+ 19  /
+
+Trigger created.
+
+SQL> 
+SQL> REM To give preference to all customers in delivery of pizzas’, a threshold is
+SQL> REM set on the number of orders per day per customer. Ensure that a
+SQL> REM customer can not place more than 5 orders per day.
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER CheckOrderLimit
+  2  BEFORE INSERT OR UPDATE ON ORDERS
+  3  FOR EACH ROW
+  4  DECLARE
+  5  	 v_order_count NUMBER;
+  6  BEGIN
+  7  	 -- Calculate the number of orders placed by the customer on the given day
+  8  	 SELECT COUNT(*)
+  9  	 INTO v_order_count
+ 10  	 FROM ORDERS
+ 11  	 WHERE cust_id = :NEW.cust_id
+ 12  	   AND TRUNC(order_date) = TRUNC(SYSDATE);
+ 13  
+ 14  	 -- Check if the order limit is exceeded
+ 15  	 IF v_order_count >= 5 THEN
+ 16  	     -- Raise an exception if the order limit is exceeded
+ 17  	     RAISE_APPLICATION_ERROR(-20002, 'Customer has reached the maximum limit of 5 orders per day.');
+ 18  	 END IF;
+ 19  END;
+ 20  /
+
+Trigger created.
+
+SQL> spool off

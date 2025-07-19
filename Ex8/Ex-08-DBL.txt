@@ -1,0 +1,439 @@
+SQL> @"E:\Sem 3 Lab\DBL\Ex8\Ex-08-DBL.sql"
+SQL> SET ECHO ON;
+SQL> 
+SQL> DROP TABLE Client CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE Rental CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE PropertyForRent CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE Owner CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> REM 1NF
+SQL> 
+SQL> CREATE TABLE ClientRental(
+  2  clientNo VARCHAR(10),
+  3  propertyNo VARCHAR(10),
+  4  cName VARCHAR(20),
+  5  pAddress VARCHAR(100),
+  6  rentStart VARCHAR(10),
+  7  rentFinish VARCHAR(10),
+  8  rent INT,
+  9  ownerNo VARCHAR(10),
+ 10  oName VARCHAR(20),
+ 11  PRIMARY KEY(clientNo, propertyNo)
+ 12  );
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO Clientrental (clientNo, propertyNo, cName, pAddress, rentStart, rentFinish, rent, ownerNo, oName)
+  2  VALUES ('CR76', 'PG4', 'John Kay', '6 Lawrence St, Glasgow', '2003-07-01', '2004-08-31', 350, 'CO40', 'Tina Murphy');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO clientrental (clientNo, propertyNo, cName, pAddress, rentStart, rentFinish, rent, ownerNo, oName)
+  2  VALUES ('CR76', 'PG16', 'John Kay', '5 Novar Dr., Glasgow', '2004-09-01', '2005-09-01', 450, 'CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO clientrental (clientNo, propertyNo, cName, pAddress, rentStart, rentFinish, rent, ownerNo, oName)
+  2  VALUES ('CR56', 'PG4', 'Aline Stewart', '6 Lawrence St, Glasgow', '2002-09-01', '2003-06-10', 350, 'CO40', 'Tina Murphy');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO clientrental (clientNo, propertyNo, cName, pAddress, rentStart, rentFinish, rent, ownerNo, oName)
+  2  VALUES ('CR56', 'PG36', 'Aline Stewart', '2 Manor Rd, Glasgow', '2003-10-10', '2004-12-01', 375, 'CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO clientrental (clientNo, propertyNo, cName, pAddress, rentStart, rentFinish, rent, ownerNo, oName)
+  2  VALUES ('CR56', 'PG16', 'Aline Stewart', '5 Novar Dr, Glasgow', '2005-11-01', '2006-08-10', 450, 'CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM ClientRental;
+
+CLIENTNO   PROPERTYNO CNAME                                                     
+---------- ---------- --------------------                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+RENTSTART  RENTFINISH       RENT OWNERNO    ONAME                               
+---------- ---------- ---------- ---------- --------------------                
+CR76       PG4        John Kay                                                  
+6 Lawrence St, Glasgow                                                          
+2003-07-01 2004-08-31        350 CO40       Tina Murphy                         
+                                                                                
+CR76       PG16       John Kay                                                  
+5 Novar Dr., Glasgow                                                            
+2004-09-01 2005-09-01        450 CO93       Tony Shaw                           
+
+CLIENTNO   PROPERTYNO CNAME                                                     
+---------- ---------- --------------------                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+RENTSTART  RENTFINISH       RENT OWNERNO    ONAME                               
+---------- ---------- ---------- ---------- --------------------                
+                                                                                
+CR56       PG4        Aline Stewart                                             
+6 Lawrence St, Glasgow                                                          
+2002-09-01 2003-06-10        350 CO40       Tina Murphy                         
+                                                                                
+CR56       PG36       Aline Stewart                                             
+2 Manor Rd, Glasgow                                                             
+
+CLIENTNO   PROPERTYNO CNAME                                                     
+---------- ---------- --------------------                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+RENTSTART  RENTFINISH       RENT OWNERNO    ONAME                               
+---------- ---------- ---------- ---------- --------------------                
+2003-10-10 2004-12-01        375 CO93       Tony Shaw                           
+                                                                                
+CR56       PG16       Aline Stewart                                             
+5 Novar Dr, Glasgow                                                             
+2005-11-01 2006-08-10        450 CO93       Tony Shaw                           
+                                                                                
+
+SQL> 
+SQL> REM 2NF
+SQL> 
+SQL> DROP TABLE ClientRental CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> CREATE TABLE Client(
+  2  clientNo VARCHAR(10) PRIMARY KEY,
+  3  cName VARCHAR(20)
+  4  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE PropertyOwner(
+  2  propertyNo VARCHAR(10) PRIMARY KEY,
+  3  pAddress VARCHAR(100),
+  4  rent INT,
+  5  ownerNo VARCHAR(10),
+  6  oName VARCHAR(20)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> 
+SQL> CREATE TABLE Rental(
+  2  clientNo VARCHAR(10),
+  3  propertyNo VARCHAR(10),
+  4  rentStart VARCHAR(10),
+  5  rentFinish VARCHAR(10),
+  6  PRIMARY KEY(clientNo, propertyNo),
+  7  FOREIGN KEY(clientNo) REFERENCES Client(clientNo),
+  8  FOREIGN KEY(propertyNo) REFERENCES PropertyOwner(propertyNo)
+  9  );
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO client (clientNo, cName)
+  2  VALUES ('CR76', 'John Kay');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO client (clientNo, cName)
+  2  VALUES ('CR56', 'Aline Stewart');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyowner (propertyNo, pAddress, rent, ownerNo, oName)
+  2  VALUES ('PG4', '6 Lawrence St, Glasgow', 350, 'CO40', 'Tina Murphy');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyowner (propertyNo, pAddress, rent, ownerNo, oName)
+  2  VALUES ('PG16', '5 Novar Dr, Glasgow', 450, 'CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyowner (propertyNo, pAddress, rent, ownerNo, oName)
+  2  VALUES ('PG36', '2 Manor Rd, Glasgow', 375, 'CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR76', 'PG4', '2003-07-01', '2004-08-31');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR76', 'PG16', '2004-09-01', '2005-09-01');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG4', '2002-09-01', '2003-06-10');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG36', '2003-10-10', '2004-12-01');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG16', '2005-11-01', '2006-08-10');
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Client;
+
+CLIENTNO   CNAME                                                                
+---------- --------------------                                                 
+CR76       John Kay                                                             
+CR56       Aline Stewart                                                        
+
+SQL> SELECT * FROM PropertyOwner;
+
+PROPERTYNO                                                                      
+----------                                                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+      RENT OWNERNO    ONAME                                                     
+---------- ---------- --------------------                                      
+PG4                                                                             
+6 Lawrence St, Glasgow                                                          
+       350 CO40       Tina Murphy                                               
+                                                                                
+PG16                                                                            
+5 Novar Dr, Glasgow                                                             
+       450 CO93       Tony Shaw                                                 
+
+PROPERTYNO                                                                      
+----------                                                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+      RENT OWNERNO    ONAME                                                     
+---------- ---------- --------------------                                      
+                                                                                
+PG36                                                                            
+2 Manor Rd, Glasgow                                                             
+       375 CO93       Tony Shaw                                                 
+                                                                                
+
+SQL> SELECT * FROM Rental;
+
+CLIENTNO   PROPERTYNO RENTSTART  RENTFINISH                                     
+---------- ---------- ---------- ----------                                     
+CR76       PG4        2003-07-01 2004-08-31                                     
+CR76       PG16       2004-09-01 2005-09-01                                     
+CR56       PG4        2002-09-01 2003-06-10                                     
+CR56       PG36       2003-10-10 2004-12-01                                     
+CR56       PG16       2005-11-01 2006-08-10                                     
+
+SQL> 
+SQL> REM 3NF
+SQL> 
+SQL> DROP TABLE Client CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE PropertyOwner CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE Rental CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> CREATE TABLE Client(
+  2  clientNo VARCHAR(10) PRIMARY KEY,
+  3  cName VARCHAR(20)
+  4  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE Owner(
+  2  ownerNo VARCHAR(10) PRIMARY KEY,
+  3  oName VARCHAR(20)
+  4  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE PropertyForRent(
+  2  propertyNo VARCHAR(10) PRIMARY KEY,
+  3  pAddress VARCHAR(100),
+  4  rent INT,
+  5  ownerNo VARCHAR(10),
+  6  FOREIGN KEY(ownerNo) REFERENCES Owner(ownerNo)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE Rental(
+  2  clientNo VARCHAR(10),
+  3  propertyNo VARCHAR(10),
+  4  rentStart VARCHAR(10),
+  5  rentFinish VARCHAR(10),
+  6  PRIMARY KEY(clientNo, propertyNo),
+  7  FOREIGN KEY(clientNo) REFERENCES Client(clientNo),
+  8  FOREIGN KEY(propertyNo) REFERENCES PropertyForRent(propertyNo)
+  9  );
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO client (clientNo, cName)
+  2  VALUES ('CR76', 'John Kay');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO client (clientNo, cName)
+  2  VALUES ('CR56', 'Aline Stewart');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO owner (ownerNo, oName)
+  2  VALUES ('CO40', 'Tina Murphy');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO owner (ownerNo, oName)
+  2  VALUES ('CO93', 'Tony Shaw');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyforrent (propertyNo, pAddress, rent, ownerNo)
+  2  VALUES ('PG4', '6 Lawrence St, Glasgow', 350, 'CO40');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyforrent (propertyNo, pAddress, rent, ownerNo)
+  2  VALUES ('PG16', '5 Novar Dr, Glasgow', 450, 'CO93');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO propertyforrent (propertyNo, pAddress, rent, ownerNo)
+  2  VALUES ('PG36', '2 Manor Rd, Glasgow', 375, 'CO93');
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR76', 'PG4', '2003-07-01', '2004-08-31');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR76', 'PG16', '2004-09-01', '2005-09-01');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG4', '2002-09-01', '2003-06-10');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG36', '2003-10-10', '2004-12-01');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO rental (clientNo, propertyNo, rentStart, rentFinish)
+  2  VALUES ('CR56', 'PG16', '2005-11-01', '2006-08-10');
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Client;
+
+CLIENTNO   CNAME                                                                
+---------- --------------------                                                 
+CR76       John Kay                                                             
+CR56       Aline Stewart                                                        
+
+SQL> SELECT * FROM Owner;
+
+OWNERNO    ONAME                                                                
+---------- --------------------                                                 
+CO40       Tina Murphy                                                          
+CO93       Tony Shaw                                                            
+
+SQL> SELECT * FROM PropertyForRent;
+
+PROPERTYNO                                                                      
+----------                                                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+      RENT OWNERNO                                                              
+---------- ----------                                                           
+PG4                                                                             
+6 Lawrence St, Glasgow                                                          
+       350 CO40                                                                 
+                                                                                
+PG16                                                                            
+5 Novar Dr, Glasgow                                                             
+       450 CO93                                                                 
+
+PROPERTYNO                                                                      
+----------                                                                      
+PADDRESS                                                                        
+--------------------------------------------------------------------------------
+      RENT OWNERNO                                                              
+---------- ----------                                                           
+                                                                                
+PG36                                                                            
+2 Manor Rd, Glasgow                                                             
+       375 CO93                                                                 
+                                                                                
+
+SQL> SELECT * FROM Rental;
+
+CLIENTNO   PROPERTYNO RENTSTART  RENTFINISH                                     
+---------- ---------- ---------- ----------                                     
+CR76       PG4        2003-07-01 2004-08-31                                     
+CR76       PG16       2004-09-01 2005-09-01                                     
+CR56       PG4        2002-09-01 2003-06-10                                     
+CR56       PG36       2003-10-10 2004-12-01                                     
+CR56       PG16       2005-11-01 2006-08-10                                     
+
+SQL> spool off
